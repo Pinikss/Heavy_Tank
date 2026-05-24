@@ -1,0 +1,114 @@
+[gd_scene format=3 uid="uid://cboa3oftv5d6o"]
+
+[ext_resource type="PackedScene" uid="uid://dmnka3qgy760c" path="res://peluru.tscn" id="1_a62es"]
+[ext_resource type="Texture2D" uid="uid://s2o1ls4a8jvu" path="res://body.png" id="2_a62es"]
+[ext_resource type="Texture2D" uid="uid://tcmissror5cf" path="res://moncong.png" id="3_yfqcd"]
+
+[sub_resource type="GDScript" id="GDScript_1ealj"]
+script/source = "extends CharacterBody2D
+
+@export var speed = 200.0
+@export var turret_speed = 1.0
+@export var bullet_scene: PackedScene
+
+@onready var sprite_container = $Container
+@onready var turret_pivot = $Container/Moncong
+@onready var muzzle = $Container/Moncong/Muzzle
+@onready var shoot_timer = $Container/ShootTimer
+
+var facing_direction = 1
+var recoil = 100
+
+func _physics_process(delta):
+	
+	var move_input = Input.get_axis(\"left\", \"right\")
+	if not is_on_floor():
+		velocity.y += 980 * delta
+	else:
+		velocity.y = 0
+		
+	# Di dalam fungsi jalan
+	if Input.is_action_pressed(\"left\") or Input.is_action_pressed(\"right\"):
+		TutorialManager.complete_step(1)
+		
+	
+	if facing_direction:
+		velocity.x = lerp(velocity.x, move_input * speed, 0.01)
+		move_and_slide()
+
+
+	if move_input != 0:
+		facing_direction = sign(move_input)
+		sprite_container.scale.x = facing_direction
+
+
+	var turret_input = 0
+	if Input.is_action_pressed(\"up\"):
+		turret_input -= 1
+	if Input.is_action_pressed(\"down\"):
+		turret_input += 1
+	
+	turret_pivot.rotation = clamp(turret_pivot.rotation + (turret_input * turret_speed * delta), deg_to_rad(-45), deg_to_rad(10))
+	# Di dalam fungsi gerak moncong
+	if Input.is_action_pressed(\"up\") or Input.is_action_pressed(\"down\"):
+		TutorialManager.complete_step(2)
+	
+	# Di dalam fungsi tembak
+	if Input.is_action_just_pressed(\"shoot\"):
+		TutorialManager.complete_step(3)
+	
+	if Input.is_action_just_pressed(\"shoot\") and shoot_timer.is_stopped():
+		shoot()
+		shoot_timer.start()
+
+func shoot():
+	var b = bullet_scene.instantiate()
+	# Gunakan global_position dan global_rotation agar peluru meluncur dengan benar
+	b.global_position = muzzle.global_position
+	b.global_rotation = muzzle.global_rotation
+	get_tree().current_scene.add_child(b)
+	
+	var direction = (global_position - muzzle.global_position).normalized()
+	velocity += direction * recoil
+"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_y32ns"]
+size = Vector2(135, 51)
+
+[node name="Player" type="CharacterBody2D" unique_id=1771104937]
+collision_mask = 3
+script = SubResource("GDScript_1ealj")
+bullet_scene = ExtResource("1_a62es")
+
+[node name="Container" type="Node2D" parent="." unique_id=1897826660]
+
+[node name="BodySprite" type="Sprite2D" parent="Container" unique_id=1871631091]
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("2_a62es")
+flip_h = true
+
+[node name="Moncong" type="Node2D" parent="Container" unique_id=179789917]
+position = Vector2(25, -10)
+
+[node name="Sprite2D" type="Sprite2D" parent="Container/Moncong" unique_id=711295254]
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("3_yfqcd")
+offset = Vector2(80, 0)
+flip_h = true
+
+[node name="Muzzle" type="Marker2D" parent="Container/Moncong" unique_id=1558794163]
+position = Vector2(46, 0)
+
+[node name="ShootTimer" type="Timer" parent="Container" unique_id=705101774]
+wait_time = 1.5
+one_shot = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=671019292]
+position = Vector2(0, 4.255)
+shape = SubResource("RectangleShape2D_y32ns")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1121799194]
+offset = Vector2(0, -150)
+zoom = Vector2(1.25, 1.25)
+position_smoothing_enabled = true
+position_smoothing_speed = 3.0

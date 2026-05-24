@@ -1,0 +1,63 @@
+[gd_scene format=3 uid="uid://7q4r6la7jkm1"]
+
+[ext_resource type="Texture2D" uid="uid://4q335xxs2p" path="res://icon.svg" id="1_4ggue"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_qidv7"]
+bounce = 0.5
+
+[sub_resource type="GDScript" id="GDScript_4ggue"]
+script/source = "extends RigidBody2D
+
+@export var fuse_time: float = 2.0 # Waktu sebelum meledak
+@export var explosion_damage: int = 30
+@export var explosion_force: float = 100.0
+
+@onready var explosion_area = $Area2D
+
+func _ready():
+	get_tree().create_timer(fuse_time, false).timeout.connect(explode)
+
+func _physics_process(delta):
+	if linear_velocity.y > -10 and linear_velocity.y < 10:
+		TutorialManager.trigger_grenade_tutorial()
+
+func launch(initial_velocity: Vector2):
+	linear_velocity = initial_velocity
+
+func explode():
+	var bodies = explosion_area.get_overlapping_bodies()
+	
+	for body in bodies:
+		if body.is_in_group(\"Player\"):
+			if body.has_method(\"take_damage\"):
+				body.take_damage(explosion_damage)
+			
+			var direction = (body.global_position - global_position).normalized()
+			if body is CharacterBody2D:
+				body.velocity += direction * explosion_force
+	print(\"DUARRR\")
+	queue_free()
+"
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_qidv7"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_4ggue"]
+radius = 59.4
+
+[node name="Granade" type="RigidBody2D" unique_id=2087190566]
+collision_layer = 4
+mass = 0.5
+physics_material_override = SubResource("PhysicsMaterial_qidv7")
+script = SubResource("GDScript_4ggue")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=774408579]
+scale = Vector2(0.234375, 0.234375)
+texture = ExtResource("1_4ggue")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1067076266]
+shape = SubResource("CircleShape2D_qidv7")
+
+[node name="Area2D" type="Area2D" parent="." unique_id=1226556814]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1778151650]
+shape = SubResource("CircleShape2D_4ggue")

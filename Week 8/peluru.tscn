@@ -1,0 +1,45 @@
+[gd_scene format=3 uid="uid://dmnka3qgy760c"]
+
+[ext_resource type="Texture2D" uid="uid://dsb00diroeidk" path="res://peluru.png" id="1_gp46o"]
+
+[sub_resource type="GDScript" id="GDScript_3kq1s"]
+script/source = "extends Area2D
+
+@export var speed = 1000.0
+
+
+func _process(delta):
+	position += Vector2.RIGHT.rotated(rotation) * speed * delta
+
+func _on_visible_on_screen_notifier_2d_screen_exited():
+	queue_free()
+
+
+func _on_body_entered(body):	
+	if body.has_method(\"take_damage\"):
+		body.take_damage(1)
+	
+	queue_free()
+"
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_epypp"]
+radius = 10.999999
+
+[node name="Peluru" type="Area2D" unique_id=1173357957]
+collision_layer = 2
+collision_mask = 2
+script = SubResource("GDScript_3kq1s")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1888802501]
+scale = Vector2(0.15, 0.15)
+texture = ExtResource("1_gp46o")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1578429434]
+scale = Vector2(1, 0.455)
+shape = SubResource("CircleShape2D_epypp")
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="." unique_id=775890021]
+rect = Rect2(-10, -5, 20, 10)
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="screen_exited" from="VisibleOnScreenNotifier2D" to="." method="_on_visible_on_screen_notifier_2d_screen_exited"]
