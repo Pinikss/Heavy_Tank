@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://cf10mndeymr3e"]
+
+[ext_resource type="Script" uid="uid://dfm50rn7g7xe0" path="res://rigid_body_2d.gd" id="1_vgfen"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_vgfen"]
+
+[node name="RigidBody2D" type="RigidBody2D" unique_id=481568754]
+script = ExtResource("1_vgfen")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1806953544]
+shape = SubResource("RectangleShape2D_vgfen")
+
+[node name="Label" type="Label" parent="." unique_id=1034726517]
+offset_left = -10.0
+offset_top = -12.0
+offset_right = 9.0
+offset_bottom = 11.0
+text = "10"
+horizontal_alignment = 1

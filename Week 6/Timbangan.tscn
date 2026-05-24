@@ -1,0 +1,33 @@
+[gd_scene format=3 uid="uid://bkhnkgpobt00"]
+
+[ext_resource type="Script" uid="uid://cft6wcueo60pi" path="res://timbangan.gd" id="1_i1p8u"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_i1p8u"]
+radius = 35.057095
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bf74i"]
+
+[node name="Timbangan" type="Node2D" unique_id=1554508105]
+script = ExtResource("1_i1p8u")
+
+[node name="Kiri" type="Area2D" parent="." unique_id=2133249060]
+position = Vector2(-50, 0)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Kiri" unique_id=938351238]
+shape = SubResource("CircleShape2D_i1p8u")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Kiri" unique_id=1589830420]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Kiri/StaticBody2D" unique_id=1343777163]
+shape = SubResource("RectangleShape2D_bf74i")
+
+[node name="Kanan" type="Area2D" parent="." unique_id=409414613]
+position = Vector2(50, 0)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Kanan" unique_id=1554578640]
+shape = SubResource("CircleShape2D_i1p8u")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Kanan" unique_id=1071147737]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Kanan/StaticBody2D" unique_id=146907774]
+shape = SubResource("RectangleShape2D_bf74i")

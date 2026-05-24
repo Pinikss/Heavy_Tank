@@ -1,0 +1,36 @@
+[gd_scene format=3 uid="uid://cbqqd7wyflq3i"]
+
+[ext_resource type="PackedScene" uid="uid://bkhnkgpobt00" path="res://Timbangan.tscn" id="1_0xm2m"]
+[ext_resource type="Script" uid="uid://flcn1xp3ht1a" path="res://main.gd" id="1_h2yge"]
+[ext_resource type="PackedScene" uid="uid://bw1emhc74rco8" path="res://Pintu.tscn" id="2_h2yge"]
+[ext_resource type="PackedScene" uid="uid://dbvr7jhf8kfh6" path="res://batu besar.tscn" id="3_1bvp3"]
+[ext_resource type="PackedScene" uid="uid://cf10mndeymr3e" path="res://batu kecil.tscn" id="4_lquwl"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_lquwl"]
+size = Vector2(1000, 20)
+
+[node name="Node2D" type="Node2D" unique_id=341836562]
+script = ExtResource("1_h2yge")
+
+[node name="Timbangan" parent="." unique_id=1554508105 instance=ExtResource("1_0xm2m")]
+position = Vector2(580, 306)
+
+[node name="Pintu" parent="." unique_id=1961263949 instance=ExtResource("2_h2yge")]
+position = Vector2(848, 291)
+
+[node name="RigidBody2D" parent="." unique_id=481568754 instance=ExtResource("4_lquwl")]
+position = Vector2(531, 254)
+
+[node name="RigidBody2D3" parent="." unique_id=1568147568 instance=ExtResource("4_lquwl")]
+position = Vector2(531, 228)
+
+[node name="RigidBody2D2" parent="." unique_id=2136644610 instance=ExtResource("3_1bvp3")]
+position = Vector2(631, 253)
+
+[node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=1999830456]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D" unique_id=408957990]
+position = Vector2(579, 363)
+shape = SubResource("RectangleShape2D_lquwl")
+
+[connection signal="timbangan_seimbang" from="Timbangan" to="." method="_on_timbangan_timbangan_seimbang"]
